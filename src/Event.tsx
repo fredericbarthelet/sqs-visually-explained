@@ -7,6 +7,6 @@ export type EventProps = {
 
 export const Event: FunctionComponent<EventProps> = ({ active }) => (
     <Fade in={true}>
-        <Box w={'30px'} h={'15px'} backgroundColor={active ? "blue.200" : "grey"} borderRadius={'15px'} m={'5px'}/>
+        <Box w={'30px'} h={'15px'} backgroundColor={active ? "blue.200" : "grey"} borderRadius={'15px'} m={'2px'}/>
     </Fade>
 )

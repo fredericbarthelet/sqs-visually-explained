@@ -1,6 +1,7 @@
 import { FunctionComponent } from "react";
-import { Card, CardHeader, CardBody, Flex, Text } from "@chakra-ui/react";
+import { Card, CardHeader, CardBody, Flex, Text, Image } from "@chakra-ui/react";
 import { Event } from './Event';
+import functionLogo from './assets/function.svg';
 
 type FunctionProps = {
     id: string;
@@ -9,9 +10,9 @@ type FunctionProps = {
 
 export const Function: FunctionComponent<FunctionProps> = ({ id, events }) => {
     return (
-        <Card>
+        <Card direction='row'>
             <CardHeader>
-                <Text>Lambda id: {id}</Text>
+                <Image width='40px' src={functionLogo} />
             </CardHeader>
             <CardBody>
                 <Flex flexWrap={"wrap"}>

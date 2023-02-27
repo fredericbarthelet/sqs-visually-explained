@@ -1,5 +1,5 @@
 import { FunctionComponent, useState } from 'react'
-import { Grid, GridItem, Heading } from '@chakra-ui/react'
+import { Card, CardBody, CardHeader, Grid, GridItem, Heading, HStack, Image, SimpleGrid, Text, VStack } from '@chakra-ui/react'
 import { Queue } from './Queue';
 import { Esm } from './Esm';
 import { Function } from './Function';
@@ -7,6 +7,7 @@ import { QueueConfig } from './QueueConfig';
 import { v4 as uuidv4 } from 'uuid';
 import { useList } from 'react-use';
 import { EsmConfig } from './EsmConfig';
+import lambdaLogo from './assets/lambda.svg'
 
 const LAMBDA_PROCESSING_TIME = 5000;
 
@@ -40,10 +41,10 @@ const App: FunctionComponent = () => {
   return (
     <Grid
       templateAreas={`"header header header"
-                      "queue esm lambda"
+                      "queue lambda lambda"
                       "queue-settings esm-settings lambda-settings"
                       "footer footer footer"`}
-      gridTemplateRows={'auto'}
+      gridTemplateRows={'100px repeat(2, 1fr)'}
       gridTemplateColumns={'repeat(3, 1fr)'}
       gap='10px'
       color='blackAlpha.700'
@@ -54,11 +55,23 @@ const App: FunctionComponent = () => {
       <GridItem pl='2' area={'queue'}>
         <Queue queueConfig={queueConfig} />
       </GridItem>
-      <GridItem pl='2' area={'esm'}>
-        <Esm queueConfig={queueConfig} esmConfig={esmConfig} invoke={startFunction} />
-      </GridItem>
-      <GridItem pl='2' area={'lambda'}>
-        {functions.map(({ id, events }) => (<Function key={id} id={id} events={events}/>))}
+      <GridItem pl='2' pr='2' area={'lambda'}>
+        <Card bg='orange.100'>
+          <CardHeader>
+            <HStack>
+                <Image width='50px' src={lambdaLogo} />
+                <Text as='b'>AWS Lambda</Text>
+            </HStack>
+          </CardHeader>
+          <CardBody pt='0px'>
+            <SimpleGrid columns={2} spacing='10px'>
+              <Esm queueConfig={queueConfig} esmConfig={esmConfig} invoke={startFunction} />
+              <VStack>
+                {functions.map(({ id, events }) => (<Function key={id} id={id} events={events}/>))}
+              </VStack>
+            </SimpleGrid>
+          </CardBody>
+        </Card>
       </GridItem>
       <GridItem pl='2' area={'queue-settings'}>
         <QueueConfig queueConfig={queueConfig} setQueueConfig={setQueueConfig} />

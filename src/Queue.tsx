@@ -1,8 +1,9 @@
 import { FunctionComponent } from "react";
-import { Button, Card, CardBody, CardHeader, Flex, HStack, Text } from "@chakra-ui/react";
+import { Button, Card, CardBody, CardHeader, Flex, HStack, Image, Text } from "@chakra-ui/react";
+import { createGlobalState } from "react-use";
 import { v4 as uuidv4 } from 'uuid';
 import { Event } from "./Event";
-import { createGlobalState } from "react-use";
+import sqsLogo from './assets/sqs.svg'
 
 export type EventInQueue = {
     id: string;
@@ -141,16 +142,20 @@ export const Queue: FunctionComponent<QueueProps> = ({ queueConfig }) => {
     const { events, sendMessage, sendMessageBatch } = useQueue(queueConfig);
 
     return (
-        <Card>
+        <Card bg='pink.100'>
             <CardHeader>
+                <HStack>
+                    <Image width='50px' src={sqsLogo} />
+                    <Text as='b'>Amazon SQS</Text>
+                </HStack>
+            </CardHeader>
+            <CardBody pt='0px'>
                 <HStack>
                     <Button onClick={() => sendMessage({ messageBody: 'This is the message body'})}>Add 1 event</Button>
                     <Button onClick={() => sendMessageBatch(new Array(10).fill({ messageBody: 'This is the message body'}))}>Add 10 events</Button>
                     <Button onClick={() => sendMessageBatch(new Array(100).fill({ messageBody: 'This is the message body'}))}>Add 100 events</Button>
                 </HStack>
                 <Text>Quantity of events in queue: {events.length}</Text>
-            </CardHeader>
-            <CardBody>
                 <Flex flexWrap={"wrap"}>
                     {events.map(({id, isInFlight}) => <Event active={!isInFlight} key={id}/>)}
                 </Flex>
