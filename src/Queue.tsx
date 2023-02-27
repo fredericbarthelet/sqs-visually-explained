@@ -41,11 +41,12 @@ type QueueProps = {
     queueConfig: {
         receiveMessageWaitTimeSeconds: number,
         visibilityTimeout: number,
+        messageRetentionPeriod: number,
     }
 }
 
 const useEventsState = createGlobalState<EventInQueue[]>([])
-export const useQueue = ({ receiveMessageWaitTimeSeconds, visibilityTimeout }: { receiveMessageWaitTimeSeconds: number, visibilityTimeout: number}) => {
+export const useQueue = ({ receiveMessageWaitTimeSeconds, visibilityTimeout, messageRetentionPeriod }: { receiveMessageWaitTimeSeconds: number, visibilityTimeout: number, messageRetentionPeriod: number}) => {
     const [events, setEvents] = useEventsState();
 
     const getAvailableMessages = () => {
@@ -53,16 +54,24 @@ export const useQueue = ({ receiveMessageWaitTimeSeconds, visibilityTimeout }: {
     }
 
     const sendMessage = (message: SendMessageInput) => {
+        const formattedMessage = createMessage(message);
+        setTimeout(() => {
+            deleteMessage({ messageId: formattedMessage.id })
+        }, messageRetentionPeriod * 1000);
         setEvents((previousEvents) => [
             ...previousEvents,
-            createMessage(message)
+            formattedMessage
         ])
     }
 
     const sendMessageBatch = (messages: SendMessageInput[]) => {
+        const formattedMessages = messages.map((message) => createMessage(message));
+        setTimeout(() => {
+            deleteMessageBatch(formattedMessages.map(({ id }) => id))
+        }, messageRetentionPeriod * 1000);
         setEvents((previousEvents) => [
             ...previousEvents,
-            ...messages.map((message) => createMessage(message))
+            ...formattedMessages
         ])
     }
 
