@@ -42,11 +42,12 @@ type QueueProps = {
         receiveMessageWaitTimeSeconds: number,
         visibilityTimeout: number,
         messageRetentionPeriod: number,
+        delaySeconds: number,
     }
 }
 
 const useEventsState = createGlobalState<EventInQueue[]>([])
-export const useQueue = ({ receiveMessageWaitTimeSeconds, visibilityTimeout, messageRetentionPeriod }: { receiveMessageWaitTimeSeconds: number, visibilityTimeout: number, messageRetentionPeriod: number}) => {
+export const useQueue = ({ receiveMessageWaitTimeSeconds, visibilityTimeout, messageRetentionPeriod, delaySeconds }: { receiveMessageWaitTimeSeconds: number, visibilityTimeout: number, messageRetentionPeriod: number, delaySeconds: number}) => {
     const [events, setEvents] = useEventsState();
 
     const getAvailableMessages = () => {
@@ -55,6 +56,12 @@ export const useQueue = ({ receiveMessageWaitTimeSeconds, visibilityTimeout, mes
 
     const sendMessage = (message: SendMessageInput) => {
         const formattedMessage = createMessage(message);
+        if(delaySeconds > 0) {
+            formattedMessage.isInFlight = true;
+            setTimeout(() => {
+                updateEvent(formattedMessage.id, { isInFlight: false })
+            }, delaySeconds * 1000);
+        }
         setTimeout(() => {
             deleteMessage({ messageId: formattedMessage.id })
         }, messageRetentionPeriod * 1000);
@@ -65,7 +72,12 @@ export const useQueue = ({ receiveMessageWaitTimeSeconds, visibilityTimeout, mes
     }
 
     const sendMessageBatch = (messages: SendMessageInput[]) => {
-        const formattedMessages = messages.map((message) => createMessage(message));
+        const formattedMessages = messages.map((message) => delaySeconds === 0 ? createMessage(message) : { ...createMessage(message), isInFlight: true });
+        if(delaySeconds > 0) {
+            setTimeout(() => {
+                formattedMessages.map(({id}) => updateEvent(id, { isInFlight: false }))
+            }, delaySeconds * 1000);
+        }
         setTimeout(() => {
             deleteMessageBatch(formattedMessages.map(({ id }) => id))
         }, messageRetentionPeriod * 1000);

@@ -8,6 +8,7 @@ type EsmProps = {
         receiveMessageWaitTimeSeconds: number,
         visibilityTimeout: number,
         messageRetentionPeriod: number,
+        delaySeconds: number,
     },
     esmConfig: {
         batchSize: number,

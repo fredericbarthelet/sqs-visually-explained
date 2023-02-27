@@ -12,10 +12,11 @@ import lambdaLogo from './assets/lambda.svg'
 const LAMBDA_PROCESSING_TIME = 5000;
 
 const App: FunctionComponent = () => {
-  const [queueConfig, setQueueConfig] = useState<{receiveMessageWaitTimeSeconds: number, visibilityTimeout: number, messageRetentionPeriod: number}>({
+  const [queueConfig, setQueueConfig] = useState<{receiveMessageWaitTimeSeconds: number, visibilityTimeout: number, messageRetentionPeriod: number, delaySeconds: number}>({
     receiveMessageWaitTimeSeconds: 0,
     visibilityTimeout: 30,
     messageRetentionPeriod: 345600,
+    delaySeconds: 0,
   })
   const [esmConfig, setEsmConfig] = useState<{batchSize: number, maximumConcurrency: number}>({
     batchSize: 10,

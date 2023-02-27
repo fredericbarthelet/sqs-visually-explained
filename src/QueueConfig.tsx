@@ -8,11 +8,13 @@ type QueueConfigProps = {
         receiveMessageWaitTimeSeconds: number;
         visibilityTimeout: number;
         messageRetentionPeriod: number;
+        delaySeconds: number;
     },
     setQueueConfig: React.Dispatch<React.SetStateAction<{
             receiveMessageWaitTimeSeconds: number;
             visibilityTimeout: number
             messageRetentionPeriod: number;
+            delaySeconds: number;
         }>>
 }
 
@@ -54,6 +56,27 @@ export const QueueConfig: FunctionComponent<QueueConfigProps> = ({ queueConfig, 
                         </NumberInputStepper>
                     </NumberInput>
                     <Slider aria-label='slider-ex-1' value={queueConfig.messageRetentionPeriod} min={60} max={1209600} onChange={(v) => setQueueConfig((queueConfig) => ({ ...queueConfig, messageRetentionPeriod: v}))}>
+                        <SliderTrack>
+                            <SliderFilledTrack />
+                        </SliderTrack>
+                        <SliderThumb />
+                    </Slider>
+                </HStack>
+            </FormControl>
+            <FormControl>
+                <HStack justifyContent={"space-between"}>
+                    <FormLabel>Delay Seconds</FormLabel>
+                    <Button variant={"outline"} size={"sm"} onClick={() => setQueueConfig((queueConfig) => ({ ...queueConfig, delaySeconds: 0}))}>Reset to default</Button>
+                </HStack>
+                <HStack spacing='24px'>
+                    <NumberInput width='135px' size='sm' min={0} max={900} value={queueConfig.delaySeconds} onChange={(v) => setQueueConfig((queueConfig) => ({ ...queueConfig, delaySeconds: Number(v)}))}>
+                        <NumberInputField />
+                        <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                        </NumberInputStepper>
+                    </NumberInput>
+                    <Slider aria-label='slider-ex-1' value={queueConfig.delaySeconds} min={0} max={900} onChange={(v) => setQueueConfig((queueConfig) => ({ ...queueConfig, delaySeconds: v}))}>
                         <SliderTrack>
                             <SliderFilledTrack />
                         </SliderTrack>
