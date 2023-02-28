@@ -1,7 +1,8 @@
-import { Text, Card, CardHeader, CardBody } from "@chakra-ui/react";
+import { Card, CardHeader, CardBody, Image } from "@chakra-ui/react";
 import { FunctionComponent, useEffect } from "react";
 import { useToggle } from "react-use";
 import { useQueue } from "./Queue";
+import workerLogo from './assets/worker.svg'
 
 type EsmProps = {
     queueConfig: {
@@ -43,9 +44,10 @@ export const Esm: FunctionComponent<EsmProps> = ({ queueConfig, esmConfig, invok
     return (
         <Card>
             <CardHeader>
-                <Text>Poller</Text>
+                Lambda poller workers
             </CardHeader>
             <CardBody>
+                <Image width='40px' src={workerLogo} />
             </CardBody>
         </Card>
     )

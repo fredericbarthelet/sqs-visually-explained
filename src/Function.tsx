@@ -11,7 +11,7 @@ type FunctionProps = {
 
 export const Function: FunctionComponent<FunctionProps> = ({ starting, events }) => {
     return (
-        <Card direction='row'>
+        <Card minW='md' direction='row'>
             <CardHeader>
                 <Image width='40px' src={functionLogo} />
             </CardHeader>
